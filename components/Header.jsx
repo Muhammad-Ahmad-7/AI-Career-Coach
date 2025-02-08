@@ -10,7 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 const Header = () => {
     return (
         <header>
-            <nav className='p-5 flex items-center justify-between bg-background/80 border-b fixed top-0 w-full backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background'>
+            <nav className='p-5 flex items-center justify-between bg-background/80 border-b fixed top-0 w-full backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/80'>
                 <div>
                     <Link href={'/'}>
                         <Image
