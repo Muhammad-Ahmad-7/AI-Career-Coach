@@ -12,3 +12,95 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          String  @id @default(uuid())
+  clerkUserId String  @unique //clerk user id
+  email       String  @unique
+  name        String?
+  imageUrl    String?
+
+  industry        String?
+  industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  bio         String?
+  experience  Int?
+  skills      String[]
+  assessments Assessment[]
+  resume      Resume?
+  coverLetter CoverLetter[]
+}
+
+model Assessment {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  quizScore       Float // Final Quiz Score
+  questions       Json[] // Array of {question, answer, userAnswer, isCorrect}
+  category        String // "Technical", "Behavioral", etc.
+  improvementTips String? // AI Generated improvement tips
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Resume {
+  id        String   @unique @default(uuid())
+  userId    String   @unique //one resume per user
+  user      User     @relation(fields: [userId], references: [id])
+  content   String   @db.Text //Markdown content
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CoverLetter {
+  id             String   @unique @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  content        String // Markdown content
+  jobDescription String?
+  companyName    String // Name of Company Applying for
+  jobTitle       String // Position Applying for
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model IndustryInsight {
+  id       String @unique @default(cuid())
+  industry String @unique // The industry this data belongs to (e.g., "tech-software-development")
+
+  //Users in the industry
+  users User[]
+
+  salaryRanges Json[] // Array of {role: string, min: float, max: float, median: float, location: string?}
+  growthRate   Float // Industry growth rate                
+  demandLevel  demandLevel // "High", "medium", "low"
+  topSkills    String[] // most in demand skills
+
+  marketOutlook marketOutlook // "Positive", "neutral", "negative"
+  keyTrends     String[] // Array of current industry trends
+
+  recommendedSkills String[] // recommended skills for the industry
+
+  lastUpdated DateTime @default(now())
+  nextUpdated DateTime // Schedule update time
+
+  @@index([industry])
+}
+
+enum demandLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum marketOutlook {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}

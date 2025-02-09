@@ -6,8 +6,10 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { Button } from './ui/button'
 import { ChevronDown, FileText, GraduationCap, LayoutDashboard, PenBox, StarIcon } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
+import { checkUser } from '@/lib/checkUser'
 
-const Header = () => {
+const Header = async () => {
+    await checkUser();
     return (
         <header>
             <nav className='p-5 flex items-center justify-between bg-background/80 border-b fixed top-0 w-full backdrop-blur-md z-50 supports-[backdrop-filter]:bg-background/80'>
