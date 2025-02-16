@@ -6,7 +6,7 @@ import { generateAiIndustryInsights } from "./dashboard.api";
 export const updateUser = async (data) => {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
-    const user = db.user.findUnique({
+    const user = await db.user.findUnique({
         where: {
             clerkUserId: userId
         }
